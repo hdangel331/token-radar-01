@@ -20,6 +20,32 @@
 //
 // No protocol name is ever special-cased: the same function scores every row. The live-token
 // protocols are kept apart and shown as the market's own values, never mixed into the ranking.
+//
+// Why these choices, and what they cost.
+//
+// A flat multiple would rank by TVL alone and hand the top of the board to the biggest
+// balance sheets. Pricing each category off its own trading median lets a lending
+// protocol and a perps exchange be judged against their own kind: on this snapshot the
+// global median is 0.246x across 119 trading protocols, but the category medians run
+// from the 0.05x floor (Liquid Staking, n=9) to 1.22x (Cross Chain Bridge, n=4), and
+// a category with fewer than three trading protocols falls back to the global median.
+// That fallback is doing real work at the top of the board: the top three rows
+// (Steakhouse, Gauntlet, Veda) are Risk Curators and Onchain Capital Allocators, and
+// neither category has three trading protocols, so all three are priced off the
+// global 0.246x. The first row priced off its own category is USDD at rank 4,
+// off the CDP median of 0.169x.
+//
+// Growth is capped on both sides so one hot week cannot crown a protocol and one bad
+// week cannot bury one: a 7-day move of +120% is worth at most +60% of implied value,
+// and a -60% week costs at most -30%. Maturity is worth at most +40% over three years,
+// so a protocol that has waited longest is rewarded for surviving, not for being old.
+//
+// The exclusions are the other half of the model. A wrapped or staked version of a
+// token that trades is not a new launch, a bridge moves other people's value rather
+// than holding its own, and an exchange already has a business model that does not
+// need a token to be priced. Leaving them in would put the same value on the board
+// twice, once as the product and once as its wrapper. The board keeps 178 rows on
+// this snapshot: the 40 watchlist slugs plus 138 genuine candidates below the floor.
 
 /** The snapshot's protocol entry: exactly the ten fields the sealed input carries. */
 export interface SnapshotProtocol {

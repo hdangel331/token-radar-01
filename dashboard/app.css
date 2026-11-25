@@ -110,6 +110,16 @@ tbody tr[data-selected="true"] { background: #1a2f22; }
 .model { margin-top: var(--step-4); padding: var(--step-5); display: grid; gap: var(--step-3); }
 .formula { font-family: var(--font-num); font-size: 13px; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere; }
 .formula b { color: var(--accent); font-weight: 600; }
+/* The pricing table inside the model panel: same table, panel and hairline as the board,
+   tightened so thirty-three categories read as one list instead of thirty-three rows. */
+.multiples { display: grid; gap: var(--step-2); margin-top: var(--step-3); padding-top: var(--step-4); border-top: 1px solid var(--border); }
+.multiples h3 { font-size: 15px; }
+.multiples .table-wrap { border: 1px solid var(--border); border-radius: var(--radius-control); }
+.multiples table { font-size: 13px; }
+.multiples th, .multiples td { padding: var(--step-2) var(--step-3); }
+.multiples tbody tr { cursor: default; }
+.multiples tbody tr:hover { background: transparent; }
+.multiples tbody tr:last-child td { border-bottom: 0; }
 .empty { padding: var(--step-7) var(--step-5); text-align: center; display: grid; gap: var(--step-3); justify-items: center; }
 .empty p { color: var(--muted); }
 .button { min-height: 36px; padding: 0 var(--step-4); border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--ink); }

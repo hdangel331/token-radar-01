@@ -332,7 +332,42 @@
         el('b', { text: 'category multiple' }),
         ' x (1 + clamp(change_7d, ' + m.growth_floor + ', ' + m.growth_cap + ') / 100 x ' + m.growth_weight + ') x (' + m.maturity_floor + ' + min(age_days, ' + m.maturity_days + ') / ' + m.maturity_days + ' x ' + m.maturity_range + ') )'
       ),
-      el('p', { class: 'sub', text: 'The category multiple is the median market-cap-to-TVL ratio of that category\u2019s own protocols that already trade, read out of this same snapshot (at least 3 of them; fewer, and the row is priced off the global median of ' + (g ? g.median : 'n/a') + 'x across ' + (g ? g.n : 0) + ' trading protocols). TVL and seven-day growth come from the snapshot. Age is the time since the protocol was first listed, the best record of how long it has run with no token; an unlisted age uses ' + m.unknown_age_days + ' days. The early radar is every genuine pre-token protocol below the watchlist floor, and the live-token protocols are set aside with their market caps shown.' })
+      el('p', { class: 'sub', text: 'The category multiple is the median market-cap-to-TVL ratio of that category\u2019s own protocols that already trade, read out of this same snapshot (at least 3 of them; fewer, and the row is priced off the global median of ' + (g ? g.median : 'n/a') + 'x across ' + (g ? g.n : 0) + ' trading protocols). TVL and seven-day growth come from the snapshot. Age is the time since the protocol was first listed, the best record of how long it has run with no token; an unlisted age uses ' + m.unknown_age_days + ' days. The early radar is every genuine pre-token protocol below the watchlist floor, and the live-token protocols are set aside with their market caps shown.' }),
+      multiplesTable()
+    );
+  }
+
+  // The pricing table the model panel shows: every category's multiple, how many trading
+  // protocols it is priced off, and whether it used its own median or the global fallback.
+  // It reads DATA.comparables, the same sets the detail drawer prices each row off.
+  function multiplesTable() {
+    var sets = DATA.comparables || {};
+    var names = Object.keys(sets).filter(function (k) { return k !== '__global__'; }).sort();
+    var g = sets['__global__'];
+    var body = el('tbody');
+    names.forEach(function (k) {
+      var s = sets[k];
+      body.appendChild(el('tr', null,
+        el('td', { text: k }),
+        el('td', { class: 'num', text: s.median.toFixed(3) + 'x' }),
+        el('td', { class: 'num', text: String(s.n) }),
+        el('td', { text: s.source === 'category' ? 'own category median' : 'global fallback' })
+      ));
+    });
+    return el('div', { class: 'multiples' },
+      el('h3', { text: 'What each category is priced off' }),
+      el('p', { class: 'sub', text: 'The multiple is the median market-cap-to-TVL ratio of the category\u2019s protocols that already trade. A category with fewer than ' + DATA.model.comparable_min + ' trading protocols is priced off the global median of ' + (g ? g.median : 'n/a') + 'x across ' + (g ? g.n : 0) + ' trading protocols instead, and the table says so.' }),
+      el('div', { class: 'table-wrap' },
+        el('table', null,
+          el('thead', null, el('tr', null,
+            el('th', { scope: 'col', text: 'Category' }),
+            el('th', { scope: 'col', text: 'Multiple' }),
+            el('th', { scope: 'col', text: 'Trading' }),
+            el('th', { scope: 'col', text: 'Priced off' })
+          )),
+          body
+        )
+      )
     );
   }
 
